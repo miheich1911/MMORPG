@@ -1,0 +1,59 @@
+{% extends 'flatpages/default.html' %}
+{% include "comments.html" with post=post comments=post.comments.all %}
+
+{% block title %}
+
+{% endblock title %}
+
+{% block content %}
+
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="card-author h5">Автор: <br>{{ post.author }}</h5>
+        <h2 class="card-title h2">Заголовок: <br>{{ post.title }}</h2>
+        <div class="small text-muted">{{ post.date_published }}</div>
+        <h4 class="card-title h4">Описание: <br>{{ post.content|safe }}</h4>
+        <a href="{% url 'post_edit' post.pk %}">Редактировать</a>
+{% if request.user.is_authenticated %}
+        <p>Комментарии: ({{ post.comments.all.count }})</p>
+
+    </div>
+</div>
+
+<hr>
+
+<ul>
+{% for item in post.comments.all %}
+    {% if status_comment %}
+    <div class="alert alert-success">
+            {{status_comment}}
+
+    </div>
+    {% endif %}
+    {% if item.status %}
+    Дата создания: {{item.created}} <br>
+    Автор комментария: {{item.user}} <br>
+    Статус комментария: {{item.status}}
+    <br><br>
+
+    <h3>{{item.comment}}</h3>
+    {% endif %}
+{% endfor %}
+</ul>
+
+    {% if messages %}
+<div class="alert alert-success">
+    {% for m in messages %}
+        {{ m }}
+    {% endfor %}
+</div>
+    {% endif %}
+<div class="col-10">
+    <form action="" id="add_form" method="post">
+        {% csrf_token %}
+            {{ form.as_p }}
+    </form>
+        <button form="add_form" type="submit" class="btn btn-primary">Добавить</button>
+</div>
+{% endif  %}
+{% endblock content %}

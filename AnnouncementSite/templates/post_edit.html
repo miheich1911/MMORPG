@@ -1,0 +1,18 @@
+{% extends 'flatpages/default.html' %}
+{% block content %}
+<h1>Редактор объявления</h1>
+{% if user == post__author %}
+<div class="card mb-4">
+    <div class="card-body">
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ form.media }}
+            {{ form.as_p }}
+            <input class="btn btn-primary" type="submit" value="Сохранить" />
+        </form>
+    </div>
+</div>
+{% else %}
+<p3>Вы не являетесь автором этого поста!</p3>
+{% endif %}
+{% endblock content %}

@@ -1,0 +1,51 @@
+{% extends 'flatpages/default.html' %}
+{% block content %}
+{% block title %}
+<h1>Отклики на мои объявления</h1>
+{% endblock title %}
+    <form action="" method="get">
+       {{ filterset.form.as_p }}
+       <input type="submit" class="btn btn-primary" value="Найти" />
+   </form>
+
+<table class="table">
+    <tr>
+        <th>Объявление</th>
+        <th>Дата</th>
+        <th>Комментарий</th>
+        <th>Статус</th>
+        <th>Автор</th>
+        <th>Дата</th>
+        <th>         </th>
+    </tr>
+
+{% for comment in comment_list %}
+
+        <td>{{ comment.post.title }}</td>
+        <td>{{ comment.post.date_published }}</td>
+        <td>{{ comment.comment }}</td>
+        <td>{{ comment.status }}</td>
+        <td>{{ comment.user }}</td>
+        <td>{{ comment.created }}</td>
+            {% if comment.status %}
+        <td>
+            <a class="update_status" onclick="location.href='{% url 'update_comment_status' comment.pk 'delete' %}'">Удалить</a>
+        </td>
+        {% else %}
+        <td>
+            {% if comment.post.author == request.user %}
+            <a class="update_status" onclick="location.href='{% url 'update_comment_status' comment.pk 'public' %}'">Опубликовать</a> /
+            <a class="update_status" onclick="location.href='{% url 'update_comment_status' comment.pk 'delete' %}'">Удалить</a>
+            {% endif %}
+        </td>
+        {% endif  %}
+
+    </tr>
+
+
+{% endfor %}
+
+</table>
+
+
+{% endblock content %}

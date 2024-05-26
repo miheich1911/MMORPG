@@ -1,0 +1,79 @@
+{% extends 'flatpages/default.html' %}
+    {% block content %}
+    {% load static %}
+    <h1>Все новости и статьи категории {{ category }}</h1>
+    <h3>Количество новостей:{{ category_post_list|length }}</h3>
+        {% if is_not_subscriber %}
+            <p class="text-center"><a href="{% url 'subscribe' category.id %}" class="button secondaryAction">Подписаться</a></p>
+        {% endif %}
+        {% if not is_not_subscriber %}
+            <p class="text-center"><a href="{% url 'unsubscribe' category.id %}" class="button secondaryAction">Отписаться</a></p>
+        {% endif %}
+
+    <div class="container" style="max-width:700px">
+        <div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+            <h2 class="display-4">Объявления</h2>
+        </div>
+        <div class="py-5">
+            <div class="row infinite-container">
+                {% if category_post_list %}
+                {% for i in category_post_list %}
+                <div class="col-md-12 infinite-item">
+                        <div class="card mb-4 box-shadow">
+                            <div class="card-body">
+
+                                <h2 style="font-size:30px;font-weight:bold;min-height:42px;">
+                                    {{ i.title }}</h2>
+                                <h3 style="font-size:20px;font-weight:bold;min-height:42px;">
+                                    Описание:<br>
+                                    {{ i.content|safe }}</h3>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">Автор: {{ i.author }}</small>
+                                </div>
+                            </div>
+                        </div>
+
+                </div>
+                {% endfor %}
+                {% endif %}
+
+            </div>
+
+
+            <div class="d-flex d-none position-fixed" style="top:35vh;left:46vw">
+                <button class="btn btn-primary loading">
+                    <span class="spinner-border spinner-border-sm"></span>
+                    Загрузка...
+                </button>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    {% if page_obj.has_next %}
+                    <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}">next</a>
+                    {% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+    <script src="/static/js/infinite.min.js"></script>
+    <script>
+        var infinite = new Waypoint.Infinite({
+            element: $('.infinite-container')[0],
+
+            offset: 'bottom-in-view',
+
+            onBeforePageLoad: function () {
+                $('.loading').show();
+            },
+            onAfterPageLoad: function () {
+                $('.loading').hide();
+            }
+
+        });
+    </script>
+
+    {% endblock %}
